@@ -83,6 +83,18 @@ namespace WPF_CustomControls.Controls
             set => SetValue(IndicatorCountProperty, value);
         }
 
+        public static DependencyProperty IndicatorTemplateProperty = DependencyProperty.Register(
+            "IndicatorTemplate",
+            typeof(DataTemplate),
+            typeof(BusyIndicator),
+            new UIPropertyMetadata());
+
+        public DataTemplate IndicatorTemplate
+        {
+            get => (DataTemplate)GetValue(IndicatorTemplateProperty);
+            set => SetValue(IndicatorTemplateProperty, value);
+        }
+
         public static DependencyProperty CycleDurationProperty = DependencyProperty.Register(
             "CycleDuration",
             typeof(Duration),
@@ -105,18 +117,6 @@ namespace WPF_CustomControls.Controls
         {
             get => (IEnumerable<AngleAndPhase>)GetValue(AngleAndPhaseListProperty);
             private set => SetValue(AngleAndPhaseListProperty, value);
-        }
-
-        public static DependencyProperty IndicatorShapeSizeProperty = DependencyProperty.Register(
-            "IndicatorShapeSize",
-            typeof(double),
-            typeof(BusyIndicator),
-            new UIPropertyMetadata(10d));
-
-        public double IndicatorShapeSize
-        {
-            get => (double)GetValue(IndicatorShapeSizeProperty);
-            set => SetValue(IndicatorShapeSizeProperty, value);
         }
 
         static BusyIndicator()
@@ -142,7 +142,7 @@ namespace WPF_CustomControls.Controls
             // Calculate interval between shapes
             var count = IndicatorCount;
             var phaseInterval = CycleDuration.TimeSpan / count;
-            var angleInterval = 360f / count;
+            var angleInterval = 360d / count;
             
             var angleAndPhases = new List<AngleAndPhase>();
             for (int i = 0; i < count; i++)
@@ -156,11 +156,11 @@ namespace WPF_CustomControls.Controls
 
         internal class AngleAndPhase
         { 
-            public float StartAngle { get; set; }
-            public float FinalAngle { get; set; }
+            public double StartAngle { get; set; }
+            public double FinalAngle { get; set; }
             public TimeSpan Phase { get; set; }
 
-            public AngleAndPhase(float startAngle, TimeSpan phase)
+            public AngleAndPhase(double startAngle, TimeSpan phase)
             {
                 StartAngle = startAngle;
                 FinalAngle = 360 + startAngle;
