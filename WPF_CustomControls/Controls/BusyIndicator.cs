@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -85,14 +86,26 @@ namespace WPF_CustomControls.Controls
 
         public static DependencyProperty IndicatorTemplateProperty = DependencyProperty.Register(
             "IndicatorTemplate",
-            typeof(DataTemplate),
+            typeof(ControlTemplate),
             typeof(BusyIndicator),
             new UIPropertyMetadata());
 
-        public DataTemplate IndicatorTemplate
+        public ControlTemplate IndicatorTemplate
         {
-            get => (DataTemplate)GetValue(IndicatorTemplateProperty);
+            get => (ControlTemplate)GetValue(IndicatorTemplateProperty);
             set => SetValue(IndicatorTemplateProperty, value);
+        }
+
+        public static DependencyProperty EasingFunctionProperty = DependencyProperty.Register(
+            "EasingFunction",
+            typeof(IEasingFunction),
+            typeof(BusyIndicator),
+            new UIPropertyMetadata());
+
+        public IEasingFunction EasingFunction
+        {
+            get => (IEasingFunction)GetValue(EasingFunctionProperty);
+            set => SetValue(EasingFunctionProperty, value);
         }
 
         public static DependencyProperty CycleDurationProperty = DependencyProperty.Register(
