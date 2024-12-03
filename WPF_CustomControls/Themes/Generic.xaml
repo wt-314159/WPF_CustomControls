@@ -42,29 +42,44 @@
                                     <Setter Property="Canvas.Left">
                                         <Setter.Value>
                                             <MultiBinding Converter="{StaticResource canvasCenteringConverter}">
-                                                <MultiBinding.Bindings>
-                                                    <Binding ElementName="border"
-                                                             Path="ActualWidth"/>
-                                                    <Binding RelativeSource="{RelativeSource Mode=Self}"
-                                                             Path="ActualWidth"/>
-                                                </MultiBinding.Bindings>
+                                                <Binding ElementName="border"
+                                                         Path="ActualWidth"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=Self}"
+                                                         Path="ActualWidth"/>
                                             </MultiBinding>
                                         </Setter.Value>
                                     </Setter>
                                     <Setter Property="Canvas.Top">
                                         <Setter.Value>
                                             <MultiBinding Converter="{StaticResource canvasCenteringConverter}">
-                                                <MultiBinding.Bindings>
-                                                    <Binding ElementName="border"
-                                                             Path="ActualHeight"/>
-                                                    <Binding RelativeSource="{RelativeSource Mode=Self}"
-                                                             Path="ActualHeight"/>
-                                                </MultiBinding.Bindings>
+                                                <Binding ElementName="border"
+                                                         Path="ActualHeight"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=Self}"
+                                                         Path="ActualHeight"/>
                                             </MultiBinding>
                                         </Setter.Value>
                                     </Setter>
                                     <Setter Property="Margin"
-                                            Value="-1"/>
+                                            Value="-2"/>
+                                    <!--<Setter Property="RenderTransformOrigin"
+                                            Value="0.5,0.5"/>
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TransformGroup>
+                                                --><!--<TranslateTransform Y="-20"/>--><!--
+                                                <TranslateTransform>
+                                                    <TranslateTransform.Y>
+                                                        <MultiBinding Converter="{StaticResource canvasCenteringConverter}" ConverterParameter="-1">
+                                                            <Binding ElementName="border"
+                                                                     Path="ActualHeight"/>
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType=ContentPresenter}"
+                                                                     Path="ActualHeight"/>
+                                                        </MultiBinding>
+                                                    </TranslateTransform.Y>
+                                                </TranslateTransform>
+                                            </TransformGroup>
+                                        </Setter.Value>
+                                    </Setter>-->
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
 
@@ -73,7 +88,7 @@
                                     <!-- Fill="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Foreground}" -->
                                     <Ellipse Fill="SlateGray"
                                              Width="10" Height="10"
-                                             Margin="-1"
+                                             Margin="-2"
                                              RenderTransformOrigin="0.5,0.5">
                                         <Ellipse.RenderTransform>
                                             <TransformGroup>

@@ -143,7 +143,7 @@ namespace WPF_CustomControls.Controls
             var count = IndicatorCount;
             var phaseInterval = CycleDuration.TimeSpan / count;
             var angleInterval = 360f / count;
-
+            
             var angleAndPhases = new List<AngleAndPhase>();
             for (int i = 0; i < count; i++)
             {

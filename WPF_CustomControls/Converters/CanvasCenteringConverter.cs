@@ -18,9 +18,18 @@ namespace WPF_CustomControls.Converters
             }
             if (values[0] is double canvasSize && values[1] is double objectSize)
             {
-                return canvasSize / 2 - (objectSize / 2);
+                var center = (canvasSize - objectSize) / 2;
+                if (parameter is double scale)
+                {
+                    return center * scale;
+                }
+                if (parameter is int intScale)
+                {
+                    return center * intScale;
+                }
+                return center;
             }
-            return 0;
+            return 0.0;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
