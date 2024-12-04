@@ -175,8 +175,8 @@ namespace WPF_CustomControls.Controls
         {
             // Calculate interval between shapes
             var count = IndicatorCount;
-            var phaseInterval = CycleDuration.TimeSpan / (count * 3);
-            var angleInterval = 360d / count;
+            var phaseInterval = CycleDuration.TimeSpan / (count * 5);
+            var angleInterval = 360d / (count * 1);
             
             var angleAndPhases = new List<AngleAndPhase>();
             for (int i = 0; i < count; i++)

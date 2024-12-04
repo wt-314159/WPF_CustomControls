@@ -21,7 +21,7 @@
         <Setter Property="Foreground"
                 Value="SlateGray"/>
         <Setter Property="IndicatorCount"
-                Value="6"/>
+                Value="8"/>
         <Setter Property="CycleDuration"
                 Value="0:0:3"/>
         <Setter Property="IndicatorTemplate">
@@ -35,7 +35,7 @@
         </Setter>
         <Setter Property="EasingFunction">
             <Setter.Value>
-                <CircleEase EasingMode="EaseInOut" />
+                <CubicEase EasingMode="EaseInOut" />
             </Setter.Value>
         </Setter>
         <Setter Property="Template">
@@ -53,13 +53,20 @@
                         </Border.Resources>
                         
                         <ItemsControl x:Name="itemsControl" 
-                                      Margin="0" 
+                                      Margin="-2,-2,0,0" 
+                                      RenderTransformOrigin="0.5,0.5"
                                       ItemsSource="{TemplateBinding AngleAndPhaseList}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <Canvas IsItemsHost="True"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.RenderTransform>
+                                <RotateTransform x:Name="itemsCtrlRotateTransform"
+                                                 Angle="0"/>
+                            </ItemsControl.RenderTransform>
+                            
                             <ItemsControl.ItemContainerStyle>
                                 <Style TargetType="ContentPresenter">
                                     <Setter Property="Canvas.Left">
@@ -82,8 +89,6 @@
                                             </MultiBinding>
                                         </Setter.Value>
                                     </Setter>
-                                    <Setter Property="Margin"
-                                            Value="-2"/>
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
 
@@ -131,7 +136,7 @@
                                                                              Duration="{Binding Duration}"
                                                                              RepeatBehavior="Forever"
                                                                              EasingFunction="{Binding EasingFunction}"/>
-                                                        </Storyboard>
+                                                        </Storyboard>                                                        
                                                     </BeginStoryboard>
                                                 </EventTrigger.Actions>
                                             </EventTrigger>
@@ -139,6 +144,23 @@
                                     </ContentPresenter>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
+
+                            <ItemsControl.Triggers>
+                                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                    <EventTrigger.Actions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="itemsCtrlRotateTransform"
+                                                                 Storyboard.TargetProperty="(RotateTransform.Angle)"
+                                                                 From="0"
+                                                                 To="360"
+                                                                 Duration="0:0:4"
+                                                                 RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger.Actions>
+                                </EventTrigger>
+                            </ItemsControl.Triggers>
                         </ItemsControl>
                     </Border>
 
