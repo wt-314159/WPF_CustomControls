@@ -19,13 +19,16 @@ namespace WPF_CustomControls.Converters
             if (values[0] is double canvasSize && values[1] is double objectSize)
             {
                 var center = (canvasSize - objectSize) / 2;
-                if (parameter is double scale)
+                if (parameter is not null)
                 {
-                    return center * scale;
-                }
-                if (parameter is int intScale)
-                {
-                    return center * intScale;
+                    if (parameter is double scale)
+                    {
+                        return center * scale;
+                    }
+                    else if (parameter is string paramString && double.TryParse(paramString, out var scale2))
+                    {
+                        return center * scale2;
+                    }
                 }
                 return center;
             }

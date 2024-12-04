@@ -15,17 +15,19 @@
         <Setter Property="BorderThickness"
                 Value="1"/>
         <Setter Property="Height"
-                Value="50"/>
+                Value="60"/>
         <Setter Property="Width"
-                Value="50"/>
+                Value="60"/>
         <Setter Property="Foreground"
                 Value="SlateGray"/>
         <Setter Property="IndicatorCount"
                 Value="6"/>
+        <Setter Property="CycleDuration"
+                Value="0:0:3"/>
         <Setter Property="IndicatorTemplate">
             <Setter.Value>
                 <ControlTemplate>
-                    <Ellipse Fill="SlateGray"
+                    <Ellipse Fill="{Binding Foreground}"
                              Width="10" Height="10"
                              Margin="0"/>
                 </ControlTemplate>
@@ -49,7 +51,10 @@
                             <converters:CanvasCenteringConverter x:Key="canvasCenteringConverter"/>
                             <converters:DebugConverter x:Key="debugConverter"/>
                         </Border.Resources>
-                        <ItemsControl ItemsSource="{TemplateBinding AngleAndPhaseList}">
+                        
+                        <ItemsControl x:Name="itemsControl" 
+                                      Margin="0" 
+                                      ItemsSource="{TemplateBinding AngleAndPhaseList}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <Canvas IsItemsHost="True"/>
@@ -60,7 +65,7 @@
                                     <Setter Property="Canvas.Left">
                                         <Setter.Value>
                                             <MultiBinding Converter="{StaticResource canvasCenteringConverter}">
-                                                <Binding ElementName="border"
+                                                <Binding ElementName="itemsControl"
                                                          Path="ActualWidth"/>
                                                 <Binding RelativeSource="{RelativeSource Mode=Self}"
                                                          Path="ActualWidth"/>
@@ -70,7 +75,7 @@
                                     <Setter Property="Canvas.Top">
                                         <Setter.Value>
                                             <MultiBinding Converter="{StaticResource canvasCenteringConverter}">
-                                                <Binding ElementName="border"
+                                                <Binding ElementName="itemsControl"
                                                          Path="ActualHeight"/>
                                                 <Binding RelativeSource="{RelativeSource Mode=Self}"
                                                          Path="ActualHeight"/>
@@ -84,18 +89,33 @@
 
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type system:TimeSpan}">
-                                    <ContentPresenter x:Name="contentPresenter" Margin="-1"
+                                    <ContentPresenter x:Name="contentPresenter" Margin="0"
                                                       RenderTransformOrigin="0.5,0.5">
+                                        <ContentPresenter.Resources>
+                                            <converters:DebugConverter x:Key="debug"/>
+                                            <SineEase x:Key="sineEase" EasingMode="EaseInOut"/>
+                                        </ContentPresenter.Resources>
                                         <ContentPresenter.RenderTransform>
                                             <TransformGroup>
-                                                <TranslateTransform Y="-20"/>
+                                                <TranslateTransform>
+                                                    <TranslateTransform.Y>
+                                                        <MultiBinding Converter="{StaticResource canvasCenteringConverter}"
+                                                                      ConverterParameter="-1">
+                                                            <Binding ElementName="itemsControl"
+                                                                     Path="ActualHeight"/>
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ContentPresenter}"
+                                                                     Path="ActualHeight"/>
+                                                        </MultiBinding>
+                                                    </TranslateTransform.Y>
+                                                </TranslateTransform>
                                                 <RotateTransform x:Name="rotateTransform" 
                                                                  Angle="{Binding Path=StartAngle}"/>
                                             </TransformGroup>
                                         </ContentPresenter.RenderTransform>
                                         
                                         <ContentPresenter.Content>
-                                            <Control Template="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}, Path=IndicatorTemplate}"/>
+                                            <Control DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}}" 
+                                                     Template="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}, Path=IndicatorTemplate}"/>
                                         </ContentPresenter.Content>
 
                                         <ContentPresenter.Triggers>
@@ -107,9 +127,10 @@
                                                                              Storyboard.TargetProperty="(RotateTransform.Angle)"
                                                                              From="{Binding Path=StartAngle}"
                                                                              To="{Binding Path=FinalAngle}"
+                                                                             BeginTime="{Binding Path=Phase}"
+                                                                             Duration="{Binding Duration}"
                                                                              RepeatBehavior="Forever"
-                                                                             Duration="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}, Path=CycleDuration}"
-                                                                             EasingFunction="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}, Path=EasingFunction}"/>
+                                                                             EasingFunction="{Binding EasingFunction}"/>
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </EventTrigger.Actions>

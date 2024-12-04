@@ -47,6 +47,8 @@ namespace WPF_CustomControls.Controls
     /// </summary>
     public class BusyIndicator : Control
     {
+        #region Dependency Properties
+
         public static DependencyProperty IsBusyProperty = DependencyProperty.Register(
             "IsBusy",
             typeof(bool),
@@ -58,6 +60,7 @@ namespace WPF_CustomControls.Controls
             get => (bool)GetValue(IsBusyProperty);
             set => SetValue(IsBusyProperty, value);
         }
+
 
         public static DependencyProperty NotBusyVisibilityProperty = DependencyProperty.Register(
             "NotBusyVisibility",
@@ -71,18 +74,20 @@ namespace WPF_CustomControls.Controls
             set => SetValue(NotBusyVisibilityProperty, value);
         }
 
+
         public static DependencyProperty IndicatorCountProperty = DependencyProperty.Register(
             "IndicatorCount",
-            typeof(uint),
+            typeof(int),
             typeof(BusyIndicator),
-            new UIPropertyMetadata((uint)6, OnIndicatorCountChanged));
+            new UIPropertyMetadata((int)6, OnIndicatorAnimationPropertyChanged),
+            new ValidateValueCallback(IsValidIndicatorCount));
 
-
-        public uint IndicatorCount
+        public int IndicatorCount
         {
-            get => (uint)GetValue(IndicatorCountProperty);
+            get => (int)GetValue(IndicatorCountProperty);
             set => SetValue(IndicatorCountProperty, value);
         }
+
 
         public static DependencyProperty IndicatorTemplateProperty = DependencyProperty.Register(
             "IndicatorTemplate",
@@ -96,11 +101,13 @@ namespace WPF_CustomControls.Controls
             set => SetValue(IndicatorTemplateProperty, value);
         }
 
+
         public static DependencyProperty EasingFunctionProperty = DependencyProperty.Register(
             "EasingFunction",
             typeof(IEasingFunction),
             typeof(BusyIndicator),
-            new UIPropertyMetadata());
+            new UIPropertyMetadata(
+                new PropertyChangedCallback(OnIndicatorAnimationPropertyChanged)));
 
         public IEasingFunction EasingFunction
         {
@@ -108,17 +115,21 @@ namespace WPF_CustomControls.Controls
             set => SetValue(EasingFunctionProperty, value);
         }
 
+
         public static DependencyProperty CycleDurationProperty = DependencyProperty.Register(
             "CycleDuration",
             typeof(Duration),
             typeof(BusyIndicator),
-            new UIPropertyMetadata(new Duration(TimeSpan.FromSeconds(1))));
+            new UIPropertyMetadata(
+                new Duration(TimeSpan.FromSeconds(1)),
+                new PropertyChangedCallback(OnIndicatorAnimationPropertyChanged)));
 
         public Duration CycleDuration
         {
             get => (Duration)GetValue(CycleDurationProperty);
             set => SetValue(CycleDurationProperty, value);
         }
+
 
         public static DependencyProperty AngleAndPhaseListProperty = DependencyProperty.Register(
             "AngleAndPhaseList",
@@ -132,6 +143,8 @@ namespace WPF_CustomControls.Controls
             private set => SetValue(AngleAndPhaseListProperty, value);
         }
 
+        #endregion
+
         static BusyIndicator()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BusyIndicator), new FrameworkPropertyMetadata(typeof(BusyIndicator)));
@@ -142,7 +155,8 @@ namespace WPF_CustomControls.Controls
             SetupAngleAndPhaseList();
         }
 
-        private static void OnIndicatorCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+
+        private static void OnIndicatorAnimationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is BusyIndicator indicator)
             {
@@ -150,17 +164,24 @@ namespace WPF_CustomControls.Controls
             }
         }
 
+        private static bool IsValidIndicatorCount(object value)
+        {
+            var intVal = (int)value;
+            return intVal >= 0 && intVal <= 64;
+        }
+
+
         private void SetupAngleAndPhaseList()
         {
             // Calculate interval between shapes
             var count = IndicatorCount;
-            var phaseInterval = CycleDuration.TimeSpan / count;
+            var phaseInterval = CycleDuration.TimeSpan / (count * 3);
             var angleInterval = 360d / count;
             
             var angleAndPhases = new List<AngleAndPhase>();
             for (int i = 0; i < count; i++)
             {
-                var angleAndPhase = new AngleAndPhase(i * angleInterval, i * phaseInterval);
+                var angleAndPhase = new AngleAndPhase(i * angleInterval, i * phaseInterval, CycleDuration, EasingFunction);
                 angleAndPhases.Add(angleAndPhase);
             }
             AngleAndPhaseList = angleAndPhases;
@@ -172,12 +193,16 @@ namespace WPF_CustomControls.Controls
             public double StartAngle { get; set; }
             public double FinalAngle { get; set; }
             public TimeSpan Phase { get; set; }
+            public Duration Duration { get; set; }
+            public IEasingFunction? EasingFunction { get; set; }
 
-            public AngleAndPhase(double startAngle, TimeSpan phase)
+            public AngleAndPhase(double startAngle, TimeSpan phase, Duration duration, IEasingFunction? easingFunction)
             {
                 StartAngle = startAngle;
                 FinalAngle = 360 + startAngle;
                 Phase = phase;
+                Duration = duration;
+                EasingFunction = easingFunction;
             }
         }
     }
