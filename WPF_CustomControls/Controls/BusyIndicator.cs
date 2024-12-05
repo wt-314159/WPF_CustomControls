@@ -13,6 +13,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPF_CustomControls.Models;
 
 namespace WPF_CustomControls.Controls
 {
@@ -75,11 +76,24 @@ namespace WPF_CustomControls.Controls
         }
 
 
+        public static DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
+            "CornerRadius",
+            typeof(CornerRadius),
+            typeof(BusyIndicator),
+            new UIPropertyMetadata(new CornerRadius(0)));
+
+        public CornerRadius CornerRadius
+        {
+            get => (CornerRadius)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
+        }
+
+
         public static DependencyProperty IndicatorCountProperty = DependencyProperty.Register(
             "IndicatorCount",
             typeof(int),
             typeof(BusyIndicator),
-            new UIPropertyMetadata((int)6, OnIndicatorAnimationPropertyChanged),
+            new UIPropertyMetadata(6, OnIndicatorAnimationPropertyChanged),
             new ValidateValueCallback(IsValidIndicatorCount));
 
         public int IndicatorCount
@@ -141,6 +155,19 @@ namespace WPF_CustomControls.Controls
         {
             get => (IEnumerable<AngleAndPhase>)GetValue(AngleAndPhaseListProperty);
             private set => SetValue(AngleAndPhaseListProperty, value);
+        }
+
+
+        public static DependencyProperty ItemsControlAngularVelocityProperty = DependencyProperty.Register(
+            "ItemsControlAngularVelocity",
+            typeof(double),
+            typeof(BusyIndicator),
+            new UIPropertyMetadata(0d));
+
+        public double ItemsControlAngularVelocity
+        {
+            get => (double)GetValue(ItemsControlAngularVelocityProperty);
+            set => SetValue(ItemsControlAngularVelocityProperty, value);
         }
 
         #endregion
