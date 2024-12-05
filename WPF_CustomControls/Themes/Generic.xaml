@@ -107,12 +107,10 @@
                             </ItemsControl.ItemContainerStyle>
 
                             <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type system:TimeSpan}">
-                                    <ContentPresenter x:Name="contentPresenter" Margin="0"
+                                <DataTemplate>
+                                    <ContentPresenter x:Name="contentPresenter"
+                                                      Margin="0"
                                                       RenderTransformOrigin="0.5,0.5">
-                                        <ContentPresenter.Resources>
-                                            <converters:DebugConverter x:Key="debug"/>
-                                        </ContentPresenter.Resources>
                                         <ContentPresenter.RenderTransform>
                                             <TransformGroup>
                                                 <TranslateTransform>
