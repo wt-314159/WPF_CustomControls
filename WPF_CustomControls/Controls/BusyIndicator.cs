@@ -116,6 +116,19 @@ namespace WPF_CustomControls.Controls
         }
 
 
+        public static DependencyProperty CentralControlTemplateProperty = DependencyProperty.Register(
+            "CentralControlTemplate",
+            typeof(ControlTemplate),
+            typeof(BusyIndicator),
+            new UIPropertyMetadata());
+
+        public ControlTemplate CentralControlTemplate
+        {
+            get => (ControlTemplate)GetValue(CentralControlTemplateProperty);
+            set => SetValue(CentralControlTemplateProperty, value);
+        }
+
+
         public static DependencyProperty EasingFunctionProperty = DependencyProperty.Register(
             "EasingFunction",
             typeof(IEasingFunction),
@@ -208,7 +221,12 @@ namespace WPF_CustomControls.Controls
             var angleAndPhases = new List<AngleAndPhase>();
             for (int i = 0; i < count; i++)
             {
-                var angleAndPhase = new AngleAndPhase(i * angleInterval, i * phaseInterval, CycleDuration, EasingFunction);
+                var angleAndPhase = new AngleAndPhase(
+                    i,
+                    i * angleInterval,
+                    i * phaseInterval,
+                    CycleDuration,
+                    EasingFunction);
                 angleAndPhases.Add(angleAndPhase);
             }
             AngleAndPhaseList = angleAndPhases;
@@ -217,14 +235,16 @@ namespace WPF_CustomControls.Controls
 
         internal class AngleAndPhase
         { 
+            public int Index { get; set; }
             public double StartAngle { get; set; }
             public double FinalAngle { get; set; }
             public TimeSpan Phase { get; set; }
             public Duration Duration { get; set; }
             public IEasingFunction? EasingFunction { get; set; }
 
-            public AngleAndPhase(double startAngle, TimeSpan phase, Duration duration, IEasingFunction? easingFunction)
+            public AngleAndPhase(int index, double startAngle, TimeSpan phase, Duration duration, IEasingFunction? easingFunction)
             {
+                Index = index;
                 StartAngle = startAngle;
                 FinalAngle = 360 + startAngle;
                 Phase = phase;

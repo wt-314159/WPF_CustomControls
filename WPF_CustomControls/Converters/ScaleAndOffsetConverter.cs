@@ -8,12 +8,12 @@ using System.Windows.Data;
 
 namespace WPF_CustomControls.Converters
 {
-    public class AngleConverter : IValueConverter
+    public class ScaleAndOffsetConverter : IValueConverter
     {
         public double Scale { get; set; } = 1;
         public double Offset { get; set; } = 0;
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is double d)
             {
@@ -22,7 +22,7 @@ namespace WPF_CustomControls.Converters
             return value;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is double d)
             {
