@@ -129,6 +129,32 @@ namespace WPF_CustomControls.Controls
         }
 
 
+        public static DependencyProperty SecondaryForegroundProperty = DependencyProperty.Register(
+            "SecondaryForeground",
+            typeof(Brush),
+            typeof(BusyIndicator),
+            new UIPropertyMetadata());
+
+        public Brush SecondaryForeground
+        {
+            get => (Brush)GetValue(SecondaryForegroundProperty);
+            set => SetValue(SecondaryForegroundProperty, value);
+        }
+
+
+        public static DependencyProperty TraceBrushProperty = DependencyProperty.Register(
+            "TraceBrush",
+            typeof(Brush),
+            typeof(BusyIndicator),
+            new UIPropertyMetadata());
+
+        public Brush TraceBrush
+        {
+            get => (Brush)GetValue(TraceBrushProperty);
+            set => SetValue(TraceBrushProperty, value);
+        }
+
+
         public static DependencyProperty EasingFunctionProperty = DependencyProperty.Register(
             "EasingFunction",
             typeof(IEasingFunction),

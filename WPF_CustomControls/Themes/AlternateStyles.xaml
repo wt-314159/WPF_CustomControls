@@ -21,6 +21,25 @@
 
     <Style x:Key="Atom"
            TargetType="{x:Type local:BusyIndicator}">
+        <Style.Resources>
+            <Style x:Key="Nucleon"
+                   TargetType="{x:Type Ellipse}"
+                   presentationOptions:Freeze="True">
+                <Setter Property="Width"
+                        Value="12" />
+                <Setter Property="Height"
+                        Value="12" />
+                <Setter Property="Fill"
+                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}, Path=SecondaryForeground}" />
+                <Setter Property="Stroke"
+                        Value="DarkSlateGray" />
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <TranslateTransform Y="-3" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Style.Resources>
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="BorderBrush"
@@ -33,6 +52,10 @@
                 Value="100" />
         <Setter Property="Foreground"
                 Value="CornflowerBlue" />
+        <Setter Property="SecondaryForeground"
+                Value="Green" />
+        <Setter Property="TraceBrush"
+                Value="LightGray" />
         <Setter Property="CornerRadius"
                 Value="4" />
         <Setter Property="IndicatorCount"
@@ -52,10 +75,27 @@
         <Setter Property="CentralControlTemplate">
             <Setter.Value>
                 <ControlTemplate>
-                    <Ellipse Width="12"
-                             Height="12"
-                             Fill="Green"
-                             Stroke="DarkSlateGray"/>
+                    <local:CenteringCanvas>
+                        <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}, Path=AngleAndPhaseList}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <local:CenteringCanvas />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentPresenter RenderTransformOrigin="0.5,0.5">
+                                        <ContentPresenter.RenderTransform>
+                                            <RotateTransform Angle="{Binding Converter={StaticResource orbitAngleConverter}}" />
+                                        </ContentPresenter.RenderTransform>
+                                        <ContentPresenter.Content>
+                                            <Ellipse Style="{StaticResource Nucleon}" />
+                                        </ContentPresenter.Content>
+                                    </ContentPresenter>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </local:CenteringCanvas>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -77,15 +117,14 @@
                             CornerRadius="{TemplateBinding CornerRadius}">
 
                         <ItemsControl x:Name="itemsControl"
-                                      ItemsSource="{TemplateBinding AngleAndPhaseList}"
-                                      RenderTransformOrigin="0.5,0.5">
+                                      ItemsSource="{TemplateBinding AngleAndPhaseList}">
                             <ItemsControl.Template>
                                 <ControlTemplate TargetType="ItemsControl">
                                     <local:CenteringCanvas>
                                         <ItemsPresenter />
-                                        <Control Panel.ZIndex="10" 
+                                        <Control Panel.ZIndex="10"
                                                  DataContext="{TemplateBinding DataContext}"
-                                                 Template="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}, Path=CentralControlTemplate}"/>
+                                                 Template="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}, Path=CentralControlTemplate}" />
                                     </local:CenteringCanvas>
                                 </ControlTemplate>
                             </ItemsControl.Template>
@@ -101,14 +140,8 @@
                                     <ContentPresenter x:Name="contentPresenter"
                                                       RenderTransformOrigin="0.5,0.5">
                                         <ContentPresenter.RenderTransform>
-                                            <RotateTransform x:Name="orbitRotation">
-                                                <RotateTransform.Angle>
-                                                    <MultiBinding Converter="{StaticResource orbitAngleConverter}">
-                                                        <Binding Path="StartAngle" />
-                                                        <Binding Path="Index" />
-                                                    </MultiBinding>
-                                                </RotateTransform.Angle>
-                                            </RotateTransform>
+                                            <RotateTransform x:Name="orbitRotation"
+                                                             Angle="{Binding Converter={StaticResource orbitAngleConverter}}" />
                                         </ContentPresenter.RenderTransform>
 
                                         <ContentPresenter.Content>
@@ -136,16 +169,8 @@
                                                     </Control.RenderTransform>
                                                 </Control>
 
-                                                <Ellipse Width="12"
-                                                         Height="12"
-                                                         Fill="Green"
-                                                         Stroke="DarkSlateGray"
-                                                         RenderTransformOrigin="0.5,0.5"
-                                                         Canvas.Left="26"
-                                                         Canvas.Top="26" />
-
                                                 <!-- Data="M 0,30 A 30,30 0 1 1 60,30 A 30,30 0 1 1 0,30" -->
-                                                <Path Stroke="LightGray"
+                                                <Path Stroke="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BusyIndicator}, Path=TraceBrush}"
                                                       StrokeThickness="1"
                                                       Data="M -16,5 A 30,10 30 1 1 76,55 A 30,10 30 1 1 -16,5"
                                                       presentationOptions:Freeze="True"

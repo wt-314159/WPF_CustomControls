@@ -5,29 +5,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using static WPF_CustomControls.Controls.BusyIndicator;
 
 namespace WPF_CustomControls.Converters
 {
-    internal class OrbitAngleConverter : IMultiValueConverter
+    internal class OrbitAngleConverter : IValueConverter
     {
         public double OddIndexOffset { get; set; }
         public double Scale { get; set; }
 
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values == null || values.Length != 2)
+            if (value is AngleAndPhase angleAndPhase)
             {
-                return double.NaN;
-            }
-            if (values[0] is double angle && values[1] is int index)
-            {
-                var offset = index % 2 == 0 ? 0 : 180;
-                return (angle * Scale) + offset;
+                var offset = angleAndPhase.Index % 2 == 0 ? 0 : 180;
+                return (angleAndPhase.StartAngle * Scale) + offset;
             }
             return double.NaN;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
