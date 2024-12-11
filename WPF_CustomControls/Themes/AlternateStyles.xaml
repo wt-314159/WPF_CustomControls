@@ -4,7 +4,8 @@
                     xmlns:local="clr-namespace:WPF_CustomControls.Controls"
                     xmlns:system="clr-namespace:System;assembly=system.runtime"
                     xmlns:converters="clr-namespace:WPF_CustomControls.Converters"
-                    xmlns:diagnostics="clr-namespace:System.Diagnostics;assembly=WindowsBase">
+                    xmlns:diagnostics="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+                    xmlns:anim="clr-namespace:WPF_CustomControls.Animations">
 
     <converters:CanvasCenteringConverter x:Key="canvasCenteringConverter" />
     <converters:MultiplyConverter x:Key="multiplyConverter" />
@@ -184,7 +185,7 @@
                                                 <EventTrigger.Actions>
                                                     <BeginStoryboard>
                                                         <Storyboard>
-                                                            <MatrixAnimationUsingPath Storyboard.TargetName="matrixTransform"
+                                                            <!--<MatrixAnimationUsingPath Storyboard.TargetName="matrixTransform"
                                                                                       Storyboard.TargetProperty="Matrix"
                                                                                       DoesRotateWithTangent="False"
                                                                                       Duration="{Binding Duration}"
@@ -193,7 +194,20 @@
                                                                     <PathGeometry Figures="M -16,5 A 30,10 30 1 1 76,55 A 30,10 30 1 1 -16,5"
                                                                                   presentationOptions:Freeze="True" />
                                                                 </MatrixAnimationUsingPath.PathGeometry>
-                                                            </MatrixAnimationUsingPath>
+                                                            </MatrixAnimationUsingPath>-->
+                                                            <anim:MatrixAnimationUsingPathExtension Storyboard.TargetName="matrixTransform"
+                                                                                                    Storyboard.TargetProperty="Matrix"
+                                                                                                    DoesRotateWithTangent="False"
+                                                                                                    Duration="{Binding Duration}"
+                                                                                                    RepeatBehavior="Forever">
+                                                                <anim:MatrixAnimationUsingPathExtension.PathGeometry>
+                                                                    <PathGeometry Figures="M -16,5 A 30,10 30 1 1 76,55 A 30,10 30 1 1 -16,5"
+                                                                                  presentationOptions:Freeze="True" />
+                                                                </anim:MatrixAnimationUsingPathExtension.PathGeometry>
+                                                                <anim:MatrixAnimationUsingPathExtension.EasingFunction>
+                                                                    <QuinticEase EasingMode="EaseInOut" />
+                                                                </anim:MatrixAnimationUsingPathExtension.EasingFunction>
+                                                            </anim:MatrixAnimationUsingPathExtension>
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </EventTrigger.Actions>

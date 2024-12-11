@@ -25,7 +25,7 @@
         <Setter Property="Foreground"
                 Value="SlateGray"/>
         <Setter Property="CornerRadius"
-                Value="4"/>
+                Value="8"/>
         <Setter Property="IndicatorCount"
                 Value="8"/>
         <Setter Property="CycleDuration"
